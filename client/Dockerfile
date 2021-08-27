@@ -5,7 +5,10 @@ WORKDIR /usr/src/app
 COPY ./package.json ./
 COPY ./yarn.lock ./
 
-RUN npm i
+RUN apt-get update &&\ 
+    apt-get install python -y &&\
+    apt-get install build-essential -y &&\
+    npm i
 
 COPY . .
 

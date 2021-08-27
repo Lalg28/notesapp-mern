@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api-server
+  name: api-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: api-server
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/mern-app: "true"
+        io.kompose.service: api-server
+    spec:
+      containers:
+        - image: api-server
+          name: api-server
+          ports:
+            - containerPort: 3001
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/src/app
+              name: api-server-claim0
+            - mountPath: /usr/src/app/node_modules
+              name: api-server-claim1
+      restartPolicy: Always
+      volumes:
+        - name: api-server-claim0
+          persistentVolumeClaim:
+            claimName: api-server-claim0
+        - name: api-server-claim1
+          persistentVolumeClaim:
+            claimName: api-server-claim1
+status: {}
